@@ -3,7 +3,8 @@
     <div class="mainHeader">
       <button>Start</button>
       <ul>
-        <li>セクション数：{{checkedChapter.length}}</li>
+        <li>チャプター数：{{checkedChapterNum}}</li>
+        <li>セクション数：{{checkedSectionNum}}</li>
         <li>フレーズ数：--</li>
       </ul>
       <ul>
@@ -13,12 +14,12 @@
     </div>
     <div v-for="(chapter,index) in chapters" :key="index">
       <h1>
-        <input type="checkbox" id="" value="">
+        <input type="checkbox" id="" value="" v-model="chapter.isSelected">
         Chapter{{index+1}}：{{chapter.name}}
       </h1>
       <ul v-for="(chapterContent,index) in chapter.chapterContents" :key="index">
         <li>
-          <input type="checkbox" id="chapeterNum" value="index">
+          <input type="checkbox" id="" value="" v-model="chapterContent.isSelected">
           {{index+1}}. {{chapterContent.sectionName}}
         </li>
       </ul>
@@ -30,7 +31,6 @@
 export default {
   data() {
     return {
-      checkedChapter: [],
       chapters: [
         {
           id: 1,
@@ -191,7 +191,18 @@ export default {
     };
   },
 	computed: {
-		isChecked: function() {
+		checkedChapterNum: function() {
+			var count = 0;
+			var chapters = this.chapters;
+			var length = chapters.length;
+			for(var i = 0; i < length; i++) {
+				if(chapters[i].isSelected) {
+					count++;
+				}
+			}
+			return count;
+		},
+    checkedSectionNum: function() {
 			var count = 0;
 			var chapterContents = this.chapterContents;
 			var length = chapterContents.length;
@@ -201,7 +212,7 @@ export default {
 				}
 			}
 			return count;
-		}
+    }
 	}
 }
 </script>

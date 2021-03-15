@@ -190,30 +190,34 @@ export default {
       ]
     };
   },
-	computed: {
-		checkedChapterNum: function() {
-			var count = 0;
-			var chapters = this.chapters;
-			var length = chapters.length;
-			for(var i = 0; i < length; i++) {
-				if(chapters[i].isSelected) {
-					count++;
-				}
-			}
-			return count;
-		},
+  computed: {
+    checkedChapterNum: function() {
+      var count = 0;
+      var chapters = this.chapters;
+      var length = chapters.length;
+      for(var i = 0; i < length; i++) {
+        if(chapters[i].isSelected) {
+          count++;
+        }
+      }
+      return count;
+    },
     checkedSectionNum: function() {
-			var count = 0;
-			var chapterContents = this.chapterContents;
-			var length = chapterContents.length;
-			for(var i = 0; i < length; i++) {
-				if(chapterContents[i].isSelected) {
-					count++;
-				}
-			}
-			return count;
+      var count = 0;
+      var chapters = this.chapters.forEach(function(element, index, array){
+        array.forEach(function(element, index, array){
+          array
+        })
+      });
+      var length = chapters.length;
+      for(var i = 0; i < length; i++) {
+        if(chapters[i].isSelected) {
+          count++;
+        }
+      }
+      return count;
     }
-	}
+  }
 }
 </script>
 

@@ -204,14 +204,10 @@ export default {
     },
     checkedSectionNum: function() {
       var count = 0;
-      var chapters = this.chapters.forEach(function(element, index, array){
-        array.forEach(function(element, index, array){
-          array
-        })
-      });
-      var length = chapters.length;
+      var chapterContents = this.chapters[0].chapterContents;
+      var length = chapterContents.length;
       for(var i = 0; i < length; i++) {
-        if(chapters[i].isSelected) {
+        if(chapterContents[i].isSelected) {
           count++;
         }
       }
@@ -234,8 +230,4 @@ ul {
 .mainHeader ul {
   text-align: right;
 }
-
-
-
-
 </style>

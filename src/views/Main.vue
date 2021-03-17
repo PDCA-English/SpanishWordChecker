@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <div class="mainHeader">
-      <button>Start</button>
+      <form action="/quiz">
+        <button>Start</button>
+      </form>
       <ul>
         <li>チャプター数：{{checkedChapterNum}}</li>
         <li>セクション数：{{checkedSectionNum}}</li>
@@ -14,7 +16,7 @@
     </div>
     <div v-for="(chapter,index) in chapters" :key="index">
       <h1>
-        <input type="checkbox" id="" value="" v-model="chapter.isSelected">
+        <input type="checkbox" id="" value="" @change="changeChildStatus($event)" v-model="chapter.isSelected">
         Chapter{{index+1}}：{{chapter.name}}
       </h1>
       <ul v-for="(chapterContent,index) in chapter.chapterContents" :key="index">
@@ -204,14 +206,26 @@ export default {
     },
     checkedSectionNum: function() {
       var count = 0;
-      var chapterContents = this.chapters[0].chapterContents;
-      var length = chapterContents.length;
-      for(var i = 0; i < length; i++) {
-        if(chapterContents[i].isSelected) {
-          count++;
+      var chapters = this.chapters
+      var lengthOfChapters = chapters.length
+      for (var h = 0; h < lengthOfChapters; h++) {
+        var eachChapter = chapters[h].chapterContents
+        var eachChapterLength = eachChapter.length
+        for(var i = 0; i < eachChapterLength; i++) {
+          if(eachChapter[i].isSelected) {
+            count++;
+          }
         }
       }
       return count;
+    },
+    changeChildStatus: function(event) {
+      var chapterContents = this.chapters[0].chapterContents;
+      var length = chapterContents.length;
+      for(var i = 0; i < length; i++) {
+        chapterContents[i].isSelected = true;
+      }
+      return event;
     }
   }
 }

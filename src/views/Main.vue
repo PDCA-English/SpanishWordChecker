@@ -2,8 +2,7 @@
   <div id="app">
     <div class="mainHeader">
       <router-link :to="{name:'Quiz'}">
-        <button>Start</button>
-        <!-- @click="selectedPhrasesObjectGetter()" -->
+        <button @click="selectedPhrasesObjectGetter()">Start</button>
       </router-link>
       <ul>
         <li>チャプター数：{{checkedChapterNum}}</li>
@@ -31,6 +30,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -531,24 +531,40 @@ export default {
     };
   },
   methods: {
-    // selectedPhrasesObjectGetter: function() {
-    //   var selectedPhrasesObject = {};
-    //   var chapters = this.chapters;
-    //   var lengthOfChapters = chapters.length;
-    //   for (var h = 0; h < lengthOfChapters; h++) {
-    //     var eachChapterContent = chapters[h].chapterContents;
-    //     var eachChapterContentLength = eachChapterContent.length;
-    //     for (var i = 0; i < eachChapterContentLength; i++) {
-    //       var eachSectionContent = eachChapterContent[i].sectionContents;
-    //       var ifEachSectionContentSelected = eachChapterContent[i].isSelected;
-    //       if (ifEachSectionContentSelected === true) {
-    //         var eachSectionContentObject = {};
-    //         eachSectionContentObject.push(eachSectionContent);
-    //         selectedPhrasesObject.push(eachSectionContentObject);
-    //       }
-    //     }
-    //   }
-    // },
+    selectedPhrasesObjectGetter: function() {
+      const lengthOfChapters = this.chapters.length;
+      let returnData = [];
+
+      for (let h = 0; h < lengthOfChapters; h++) {
+        const chapter = this.chapters[h];
+        const chapterId = chapter.id;
+        let ids = [];
+        // チャプター自体選択されていたら
+        if (chapter.isSelected) {
+          ids = chapter.chapterContents.map(c => c.id);
+        } else {
+          // 選択されているセクションを取り出し「ids」に代入
+          // ids =
+        }
+
+        // チャプターの番号と選択されているセクションのidを持たせたデータ
+        const data = {
+          chapterId: chapterId,
+          contentsIds: ids
+        };
+        returnData.push(data);
+      }
+
+      // 例外処理：選択されていなかったらページ遷移を行わない
+
+      this.$router.push({ name: "Quiz", query: { data: returnData } });
+      // 遷移先のページで「this.$route.query.data」このように記述するとqueryのデータを受け取ることができます
+      // 遷移先のページでqueryに渡したデータを用いてフレーズのデータ取得
+    },
+    async mounted() {
+      const resChapters = await axios.get("chapter.json");
+      this.chapters = resChapters.data.chapter;
+    },
     changeChildStatus: function() {
       var chapters = this.chapters;
       var lengthOfChapters = chapters.length;

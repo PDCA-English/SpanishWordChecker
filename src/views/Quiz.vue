@@ -21,45 +21,45 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      recognizing: false;
-      recognition: null;
-      recoredText: "";
-    }
-  },
-  methods: {
-  async created() {
-    const { webkitSpeechRecognition } = window;
-    const recognition = new webkitSpeechRecognition();
-    recognition.lang = "ja-JP";
-    recognition.continuous = true;
-    recognition.onresult = await this.recognize;
-    this.recognition = recognition;
-  },
-  record: function() {
-  if (this.recognizing) {
-    this.recognition.stop();
-  } else {
-    this.recognition.start();
-  }
-  this.recognizing = !this.recognizing;
-  },
-  async recognize(e: SpeechRecognitionEvent) {
-    this.recoredText += `${e.results[e.results.length - 1][0].transcript}\n`;
-  },
-  computed: {
-  }
+// <script>
+// export default {
+//   data() {
+//     return {
+//       recognizing: boolean = false,
+//       recognition: any = null,
+//       recoredText: string = "",
+//     }
+//   },
+//   methods: {
+//   async created() {
+//     const { webkitSpeechRecognition } = window;
+//     const recognition = new webkitSpeechRecognition();
+//     recognition.lang = "ja-JP";
+//     recognition.continuous = true;
+//     recognition.onresult = await this.recognize;
+//     this.recognition = recognition;
+//   },
+//   record: function() {
+//   if (this.recognizing) {
+//     this.recognition.stop();
+//   } else {
+//     this.recognition.start();
+//   }
+//   this.recognizing = !this.recognizing;
+//   },
+//   async recognize(e: SpeechRecognitionEvent) {
+//     this.recoredText += `${e.results[e.results.length - 1][0].transcript}\n`;
+//   },
+//   computed: {
+//   }
 
-  protected record() {
-    if (this.recognizing) {
-      this.recognition.stop();
-    } else {
-      this.recognition.start();
-    }
-    this.recognizing = !this.recognizing;
-  }
-}
-</script>
+//   protected record() {
+//     if (this.recognizing) {
+//       this.recognition.stop();
+//     } else {
+//       this.recognition.start();
+//     }
+//     this.recognizing = !this.recognizing;
+//   }
+// }
+// </script>

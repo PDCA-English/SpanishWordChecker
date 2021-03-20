@@ -2,7 +2,8 @@
   <div id="app">
     <div class="mainHeader">
       <router-link :to="{name:'Quiz'}">
-        <button @click="selectedPhrasesObjectGetter()">Start</button>
+        <button>Start</button>
+        <!-- @click="selectedPhrasesObjectGetter()" -->
       </router-link>
       <ul>
         <li>チャプター数：{{checkedChapterNum}}</li>
@@ -530,24 +531,24 @@ export default {
     };
   },
   methods: {
-    selectedPhrasesObjectGetter: function() {
-      var selectedPhrasesObject = {};
-      var chapters = this.chapters;
-      var lengthOfChapters = chapters.length;
-      for (var h = 0; h < lengthOfChapters; h++) {
-        var eachChapterContent = chapters[h].chapterContents;
-        var eachChapterContentLength = eachChapterContent.length;
-        for (var i = 0; i < eachChapterContentLength; i++) {
-          var eachSectionContent = eachChapterContent[i].sectionContents;
-          var ifEachSectionContentSelected = eachChapterContent[i].isSelected;
-          if (ifEachSectionContentSelected === true) {
-            var eachSectionContentObject = {};
-            eachSectionContentObject.push(eachSectionContent);
-            selectedPhrasesObject.push(eachSectionContentObject);
-          }
-        }
-      }
-    },
+    // selectedPhrasesObjectGetter: function() {
+    //   var selectedPhrasesObject = {};
+    //   var chapters = this.chapters;
+    //   var lengthOfChapters = chapters.length;
+    //   for (var h = 0; h < lengthOfChapters; h++) {
+    //     var eachChapterContent = chapters[h].chapterContents;
+    //     var eachChapterContentLength = eachChapterContent.length;
+    //     for (var i = 0; i < eachChapterContentLength; i++) {
+    //       var eachSectionContent = eachChapterContent[i].sectionContents;
+    //       var ifEachSectionContentSelected = eachChapterContent[i].isSelected;
+    //       if (ifEachSectionContentSelected === true) {
+    //         var eachSectionContentObject = {};
+    //         eachSectionContentObject.push(eachSectionContent);
+    //         selectedPhrasesObject.push(eachSectionContentObject);
+    //       }
+    //     }
+    //   }
+    // },
     changeChildStatus: function() {
       var chapters = this.chapters;
       var lengthOfChapters = chapters.length;

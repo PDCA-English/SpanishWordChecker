@@ -2,7 +2,8 @@
   <div id="app">
     <div class="mainHeader">
       <router-link :to="{name:'Quiz'}">
-        <button @click="selectedPhrasesObjectGetter()">Start</button>
+        <button>Start</button>
+        <!-- @click="selectedPhrasesObjectGetter()" -->
       </router-link>
       <ul>
         <li>チャプター数：{{checkedChapterNum}}</li>

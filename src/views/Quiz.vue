@@ -9,7 +9,7 @@
     </div>
     <div class="quizContents">
       <div id="Jsentence"></div>
-      <div id="Esentence">{{$route.query}}</div>
+      <div id="Esentence">{{ selectedPhrases }}</div>
       <div id="recoredText">{{ recoredText }}</div>
     </div>
     <div class="quizHints">
@@ -24,13 +24,15 @@
 export default {
   data() {
     return {
+      /*voice recognition*/
       recognition: null,
       recoredText: "",
-      myAnswer: "",
+      /*timer*/
       timer: null,
       time: 10,
       timeComment: "",
-      selectedPhrases: {},
+      /*answer checker*/
+      selectedPhrases: [],
     }
   },
   mounted() {
@@ -44,7 +46,7 @@ export default {
         this.recoredText += transcript;
         }
       },
-      countdown() {
+      countdown: function() {
         this.time --;
         this.timeComment = `残り${this.time}秒`;
         if(this.time==0){
@@ -52,9 +54,17 @@ export default {
           this.timeComment = "終了";
         }
       },
-      selectedPhrasesGetter() {
-        this.selectedPhrases = this.$route.query.data;
-      }
+      // selectedPhrasesGetter() {
+      //   var queryData = this.$route.query.data;
+      //   var queryDataLength = queryData.length;
+      //   for (i = 0, i < queryDataLength, i++) {
+      //     var contentsIdsData = queryData[i].contentsIds;
+      //     var contentsIdsDataLength = contentsIdsData.length;
+      //     for (j = 0, j < contentsIdsDataLength, j++) {
+      //       this.selectedPhrases.push(contentsIdsData[j]);
+      //     }
+      //   }
+      // }
   },
   async created() {
     const { webkitSpeechRecognition } = window;

@@ -2,7 +2,7 @@
   <div class="home">
     <h1>{{ recoredText }}</h1>
     <h3>{{ timeComment }}</h3>
-    <h1>{{ myAnswer }}</h1>
+    <h1>{{ answerChecker }}</h1>
   </div>
 </template>
 
@@ -42,19 +42,30 @@ export default {
         }
       },
       answerChecker: function() {
-        var updatedResultArray = this.recoredText.split(' ');
+        //音声認識で取得したrecoredTextを配列にする
+        var recoredTextArray = this.recoredText.split(' ');
+        //答え（answerOne）に一致する単語をrecoredTextArrayから入れるための箱を作る
         var tempAns = [];
-        for (let i = 0, j = 0; i < updatedResultArray.length; ){
-          if (updatedResultArray[i] === this.answerOne[j]){
-            tempAns.push(updatedResultArray[i]);
+        //音声認識で取得したrecoredTextArrayの単語の分だけ同じ処理を繰り返す
+        for (let i = 0, j = 0; i < recoredTextArray.length; ){
+          //音声認識で取得したrecoredTextArrayと答えが一致するか確認
+          if (recoredTextArray[i] === this.answerOne[j]){
+            //一致すれば答えと一致したrecoredTextArrayの単語をtempAnsへ格納する
+            tempAns.push(recoredTextArray[i]);
+            //チェックし終えたものはもういいので、次へ
             i += 1;
+            //答えも次の単語とrecoredTextArrayを比べるため次へ
             j += 1;
           } else {
+            //一致しない場合は
             i += 1;
           }
-          this.myAnswer = tempAns.join(' ');
+          //正解と一致した回答（myAnswer）を定義
+          var myAnswer = this.myAnswer
+          //myAnswerは一致した答えを格納した配列をjoin(' ')でつなげることで文になる
+          myAnswer = tempAns.join(' ');
         }
-        return(this.myAnswer);
+        return(myAnswer);
       }
   },
   async created() {

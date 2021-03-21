@@ -9,7 +9,7 @@
     </div>
     <div class="quizContents">
       <div id="Jsentence"></div>
-      <div id="Esentence"></div>
+      <div id="Esentence">{{$route.query}}</div>
       <div id="recoredText">{{ recoredText }}</div>
     </div>
     <div class="quizHints">

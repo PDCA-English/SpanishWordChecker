@@ -9,12 +9,18 @@
 export default {
   data() {
     return {
+      /*voice recognition*/
       recognition: null,
       recoredText: "",
-      myAnswer: "",
+      /*timer*/
       timer: null,
       time: 10,
       timeComment: "",
+      /*answer checker*/
+      // result: "",
+      // myAnswer: "",
+      // answerOne: "yo como un bocadillo".split(' '),
+      // tempAns: [],
     }
   },
   mounted() {
@@ -28,14 +34,28 @@ export default {
         this.recoredText += transcript;
         }
       },
-      countdown() {
+      countdown: function() {
         this.time --;
         this.timeComment = `残り${this.time}秒`;
         if(this.time==0){
           clearInterval(this.timer)
           this.timeComment = "終了";
         }
-      }
+      },
+      // answerChecker() {
+      //   for (let i = 0, j = 0; i < updatedResultArray.length; ){
+      //     if (updatedResultArray[i] === answerOne[j]){
+      //       tempAns.push(updatedResultArray[i]);
+      //       console.log(tempAns);
+      //       i += 1;
+      //       j += 1;
+      //     } else {
+      //       i += 1;
+      //     }
+      //     myAnswer.innerHTML = tempAns.join(' ');
+      //   }
+      // }
+      
   },
   async created() {
     const { webkitSpeechRecognition } = window;

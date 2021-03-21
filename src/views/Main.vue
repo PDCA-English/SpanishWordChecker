@@ -1,10 +1,7 @@
 <template>
   <div id="app">
     <div class="mainHeader">
-      <router-link :to="{name:'Quiz'}">
-        <button>Start</button>
-        <!-- @click="selectedPhrasesObjectGetter()" -->
-      </router-link>
+      <button @click="selectedPhrasesObjectGetter()">Start</button>
       <ul>
         <li>チャプター数：{{checkedChapterNum}}</li>
         <li>セクション数：{{checkedSectionNum}}</li>

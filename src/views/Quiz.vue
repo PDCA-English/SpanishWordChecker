@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -32,7 +33,8 @@ export default {
       time: 10,
       timeComment: "",
       /*answer checker*/
-      selectedPhrases: [],
+      selectedPhrases: {},
+      chapter: {},
     }
   },
   mounted() {
@@ -54,17 +56,21 @@ export default {
           this.timeComment = "終了";
         }
       },
-      // selectedPhrasesGetter() {
-      //   var queryData = this.$route.query.data;
-      //   var queryDataLength = queryData.length;
-      //   for (i = 0, i < queryDataLength, i++) {
-      //     var contentsIdsData = queryData[i].contentsIds;
-      //     var contentsIdsDataLength = contentsIdsData.length;
-      //     for (j = 0, j < contentsIdsDataLength, j++) {
-      //       this.selectedPhrases.push(contentsIdsData[j]);
-      //     }
-      //   }
-      // }
+      async mounted() {
+        const resChapters = await axios.get("chapter.json");
+        this.chapters = resChapters.data.chapter;
+      },
+      selectedPhrasesGetter() {
+        var queryData = this.$route.query.data;
+        var queryDataLength = queryData.length;
+        for (let i = 0; i < queryDataLength; i++) {
+          var contentsIdsData = queryData[i].contentsIds;
+          var contentsIdsDataLength = contentsIdsData.length;
+          for (let j = 0; j < contentsIdsDataLength; j++) {
+            this.selectedPhrases.push(contentsIdsData[j]);
+          }
+        }
+      }
   },
   async created() {
     const { webkitSpeechRecognition } = window;

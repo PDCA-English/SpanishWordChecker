@@ -2,6 +2,7 @@
   <div class="home">
     <h1>{{ recoredText }}</h1>
     <h3>{{ timeComment }}</h3>
+    <h1>{{ myAnswer }}</h1>
   </div>
 </template>
 
@@ -17,10 +18,8 @@ export default {
       time: 10,
       timeComment: "",
       /*answer checker*/
-      // result: "",
-      // myAnswer: "",
-      // answerOne: "yo como un bocadillo".split(' '),
-      // tempAns: [],
+      myAnswer: "",
+      answerOne: "yo como un bocadillo".split(' '),
     }
   },
   mounted() {
@@ -42,20 +41,21 @@ export default {
           this.timeComment = "終了";
         }
       },
-      // answerChecker() {
-      //   for (let i = 0, j = 0; i < updatedResultArray.length; ){
-      //     if (updatedResultArray[i] === answerOne[j]){
-      //       tempAns.push(updatedResultArray[i]);
-      //       console.log(tempAns);
-      //       i += 1;
-      //       j += 1;
-      //     } else {
-      //       i += 1;
-      //     }
-      //     myAnswer.innerHTML = tempAns.join(' ');
-      //   }
-      // }
-      
+      answerChecker: function() {
+        var updatedResultArray = this.recoredText.split(' ');
+        var tempAns = [];
+        for (let i = 0, j = 0; i < updatedResultArray.length; ){
+          if (updatedResultArray[i] === this.answerOne[j]){
+            tempAns.push(updatedResultArray[i]);
+            i += 1;
+            j += 1;
+          } else {
+            i += 1;
+          }
+          this.myAnswer = tempAns.join(' ');
+        }
+        return(this.myAnswer);
+      }
   },
   async created() {
     const { webkitSpeechRecognition } = window;
@@ -65,7 +65,6 @@ export default {
     recognition.onresult = await this.recognize;
     this.recognition = recognition;
     this.recognition.start();
-  },
-  computed: {}
+  }
 }
 </script>

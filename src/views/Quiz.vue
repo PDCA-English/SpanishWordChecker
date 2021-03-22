@@ -55,21 +55,6 @@ export default {
           clearInterval(this.timer)
           this.timeComment = "終了";
         }
-      },
-      async mounted() {
-        const resChapters = await axios.get("chapter.json");
-        this.chapters = resChapters.data.chapter;
-      },
-      selectedPhrasesGetter() {
-        var queryData = this.$route.query.data;
-        var queryDataLength = queryData.length;
-        for (let i = 0; i < queryDataLength; i++) {
-          var contentsIdsData = queryData[i].contentsIds;
-          var contentsIdsDataLength = contentsIdsData.length;
-          for (let j = 0; j < contentsIdsDataLength; j++) {
-            this.selectedPhrases.push(contentsIdsData[j]);
-          }
-        }
       }
   },
   async created() {
@@ -80,6 +65,25 @@ export default {
     recognition.onresult = await this.recognize;
     this.recognition = recognition;
     this.recognition.start();
+
+    const resChapters = await axios.get("chapter.json");
+    const chapters = resChapters.data.chapter;
+    const selectData = this.$route.query.data;
+    // 選択したチャプターの情報をループさせる
+    selectData.forEach((s) => {
+      console.log(s);
+      // chaptersの中から取り出す選択したチャプターとマッチするものを取り出す
+      const chapter = chapters.find((c) => c.id === selectData.chapterId);
+
+      // チャプターが存在していたら
+      if (chapter) {
+        const filterdChapter = chapter.chapterContents.filter((content) => content.id === selectData.contentsIds
+          // セクションidが含まれているか確認
+        );
+        // 選択したチャプターのフレーズのみ取得
+        console.log(filterdChapter)
+      }
+    });
   },
   computed: {}
 }

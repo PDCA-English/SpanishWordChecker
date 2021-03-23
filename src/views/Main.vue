@@ -539,12 +539,11 @@ export default {
         let ids = [];
         // チャプター自体選択されていたら
         if (chapter.isSelected) {
-          ids = chapter.chapterContents.map(c => c.id);
+          ids = chapter.chapterContents.map(c => c);
         } else {
           // 選択されているセクションを取り出し「ids」に代入
-          // ids =
+          ids = chapter.chapterContents.filter((content) => content.isSelected === true);
         }
-
         // チャプターの番号と選択されているセクションのidを持たせたデータ
         const data = {
           chapterId: chapterId,

@@ -9,7 +9,7 @@
     </div>
     <div class="quizContents">
       <div id="Jsentence"></div>
-      <div id="Esentence">{{ selectedPhrases }}</div>
+      <div id="Esentence">{{ testdata }}</div>
       <div id="recoredText">{{ recoredText }}</div>
     </div>
     <div class="quizHints">
@@ -35,6 +35,7 @@ export default {
       /*answer checker*/
       selectedPhrases: {},
       chapter: {},
+      testdata: "",
     }
   },
   mounted() {
@@ -74,7 +75,6 @@ export default {
       console.log(s);
       // chaptersの中から取り出す選択したチャプターとマッチするものを取り出す
       const chapter = chapters.find((c) => c.id === selectData.chapterId);
-
       // チャプターが存在していたら
       if (chapter) {
         const filterdChapter = chapter.chapterContents.filter((content) => content.id === selectData.contentsIds
@@ -84,6 +84,7 @@ export default {
         console.log(filterdChapter)
       }
     });
+    this.testdata = selectData
   },
   computed: {}
 }

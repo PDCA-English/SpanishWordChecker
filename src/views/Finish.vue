@@ -67,6 +67,15 @@ export default {
     this.recognition = recognition;
     this.recognition.start();
     this.answerChecker();
+    // this.voiceRecogChecker();
+  // },
+  //   computed: {
+  //   voiceRecogChecker: function() {
+  //     if(this.recoredText !== "") {
+  //       this.answerChecker();
+  //     }
+  //     return this.answerChecker();
+  //   }
   }
 }
 </script>

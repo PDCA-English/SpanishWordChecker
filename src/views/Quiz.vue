@@ -9,7 +9,7 @@
     </div>
     <div class="quizContents">
       <div id="Jsentence"></div>
-      <div id="Esentence">{{ testdata }}</div>
+      <div id="Esentence">{{ answerInfo }}</div>
       <div id="recoredText">{{ recoredText }}</div>
     </div>
     <div class="quizHints">
@@ -33,9 +33,7 @@ export default {
       time: 10,
       timeComment: "",
       /*answer checker*/
-      selectedPhrases: {},
-      chapter: {},
-      testdata: "",
+      answerInfo: {},
     }
   },
   mounted() {
@@ -56,6 +54,9 @@ export default {
           clearInterval(this.timer)
           this.timeComment = "終了";
         }
+      },
+      answerMaker: function() {
+
       }
   },
   async created() {
@@ -81,11 +82,11 @@ export default {
           // セクションidが含まれているか確認
         );
         // 選択したチャプターのフレーズのみ取得
-        console.log(filterdChapter)
+        var answerInfo = this.answerInfo;
+        answerInfo = filterdChapter;
+        console.log(answerInfo);
       }
     });
-    this.testdata = selectData
-  },
-  computed: {}
+  }
 }
 </script>

@@ -33,7 +33,7 @@ export default {
       time: 10,
       timeComment: "",
       /*answer checker*/
-      answerInfo: {},
+      answerInfo: [],
     }
   },
   mounted() {
@@ -74,6 +74,7 @@ export default {
     // 選択したチャプターの情報をループさせる
     selectData.forEach((s) => {
       console.log(s);
+      console.log(selectData);
       // chaptersの中から取り出す選択したチャプターとマッチするものを取り出す
       const chapter = chapters.find((c) => c.id === selectData.chapterId);
       // チャプターが存在していたら

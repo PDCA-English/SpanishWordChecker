@@ -3,6 +3,7 @@
     <h1>{{ recoredText }}</h1>
     <h3>{{ timeComment }}</h3>
     <h1>{{ myAnswer }}</h1>
+    <h1 v-show="correctness">！正解！</h1>
   </div>
 </template>
 
@@ -15,11 +16,13 @@ export default {
       recoredText: "",
       /*timer*/
       timer: null,
-      time: 10,
+      time: 11,
       timeComment: "",
       /*answer checker*/
       myAnswer: "",
-      answerOne: "yo como un bocadillo".split(" "),
+      answerOne: "yo como".split(" "),
+      correctness: false,
+      waitSec: 3,
     }
   },
   mounted() {
@@ -36,17 +39,23 @@ export default {
       countdown: function() {
         this.time --;
         this.timeComment = `残り${this.time}秒`;
-        if(this.time==0){
-          clearInterval(this.timer)
+        if(this.correctness === true){
+          this.timeComment = "！正解！";
+          this.time = 10;
+        } else if(this.time<=0 && this.time>=-this.waitSec){
           this.timeComment = "終了";
+        } else if(this.time==-this.waitSec-1){
+          this.time = 10;
+          this.timeComment = `残り${this.time}秒`;
         }
+        
       },
       answerChecker: function() {
         var recoredTextArray = this.recoredText.split(" ");
         var tempAns = [];
         for (let i = 0, j = 0; i < recoredTextArray.length; ){
-          console.log(recoredTextArray[i]);
-          console.log(this.answerOne[i]);
+          // console.log(recoredTextArray[i]);
+          // console.log(this.answerOne[i]);
           if (recoredTextArray[i] === this.answerOne[j]){
             tempAns.push(recoredTextArray[i]);
             i += 1;
@@ -66,16 +75,19 @@ export default {
     recognition.onresult = await this.recognize;
     this.recognition = recognition;
     this.recognition.start();
-    this.answerChecker();
-    // this.voiceRecogChecker();
-  // },
-  //   computed: {
-  //   voiceRecogChecker: function() {
-  //     if(this.recoredText !== "") {
-  //       this.answerChecker();
-  //     }
-  //     return this.answerChecker();
-  //   }
+  },
+  watch: {
+    recoredText: function() {
+      console.log("check");
+      this.answerChecker();
+      if(this.myAnswer === this.answerOne.join(" ")){
+        this.correctness = true;
+        var self = this;
+        setTimeout(function(){
+          self.correctness = false;
+          },self.waitSec*1000);
+        }
+    }
   }
 }
 </script>

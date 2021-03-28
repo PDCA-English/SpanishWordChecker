@@ -557,6 +557,8 @@ export default {
       this.$router.push({ name: "Quiz", query: { data: returnData } });
       // 遷移先のページで「this.$route.query.data」このように記述するとqueryのデータを受け取ることができます
       // 遷移先のページでqueryに渡したデータを用いてフレーズのデータ取得
+      
+      // this.$router.push({ name: "Quiz", params: { num: this.checkedSectionContentsNum } });
     },
     async mounted() {
       const resChapters = await axios.get("chapter.json");

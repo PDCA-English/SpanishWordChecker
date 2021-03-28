@@ -5,11 +5,11 @@
         <button>戻る</button>
       </router-link>
       <div id="timer">{{ timeComment }}</div>
-      <div id="counter"></div>
+      <div id="counter">{{ correctOnes.length }}/{{ questions.length }}</div>
     </div>
     <div class="quizContents">
-      <div id="Jsentence"></div>
-      <div id="Esentence"></div>
+      <div id="Jsentence">{{ jsentence }}</div>
+      <div id="Esentence" v-show="correctness">{{ esentence }}</div>
       <div id="myAnswer">{{ myAnswer }}</div>
       <div id="recoredText">{{ recoredText }}</div>
       <h1 v-show="correctness">！正解！</h1>
@@ -32,7 +32,7 @@ export default {
       recoredText: "",
       /*timer*/
       timer: null,
-      time: 11,
+      time: 21,
       timeComment: "",
       /*answer checker*/
       myAnswer: "",
@@ -43,6 +43,9 @@ export default {
       correctOnes: [],
       questionCounter: 0,
       currentQuestion: [],
+      currentQuestionEs: [],
+      jsentence: "",
+      esentence: "",
     }
   },
   mounted() {
@@ -68,20 +71,30 @@ export default {
         } else if(this.time<=0 && this.time>=-this.waitSec){
           this.timeComment = "終了";
         } else if(this.time==-this.waitSec-1){
-          this.time = 10;
+          this.time = 20;
           this.timeComment = `残り${this.time}秒`;
         }
       },
       answerChecker: function() {
-        var recoredTextArray = this.recoredText.split(" ");
+        //質問と答えを更新して表示
+        var recoredTextArray = this.recoredText
+                                   .toLowerCase()
+                                   .split(" ");
         var tempAns = [];
-        var currentQuestionEs = [];
-        currentQuestionEs = this.currentQuestion.esentence.toLowerCase().split(" ").replace(/!/g, '').replace(/¡/g, '').replace(/\?/g, '').replace(/¿/g, '').replace(/./g, '');
-        console.log("currentQuestionEs",currentQuestionEs);
+        this.currentQuestionEs = this.currentQuestion
+                                .esentence
+                                .toLowerCase()
+                                .replace(/!/g, '')
+                                .replace(/¡/g, '')
+                                .replace(/\?/g, '')
+                                .replace(/¿/g, '')
+                                .replace(/\./, '')
+                                .split(" ");
+        console.log("currentQuestionEs",this.currentQuestionEs);
         for (let i = 0, j = 0; i < recoredTextArray.length; ){
-          if (recoredTextArray[i] === currentQuestionEs[j]){
+          if (recoredTextArray[i] === this.currentQuestionEs[j]){
               console.log("recoredTextArray[i]",recoredTextArray[i]);
-              console.log("this.currentQuestionEs[i]",currentQuestionEs[i]);
+              console.log("this.currentQuestionEs[i]",this.currentQuestionEs[j]);
             tempAns.push(recoredTextArray[i]);
             i += 1;
             j += 1;
@@ -92,10 +105,12 @@ export default {
         this.myAnswer = tempAns.join(" ");
       },
       nextQuestion: function() {
+        this.recoredText = "";
         this.myAnswer = "";
         this.questionCounter += 1;
         this.currentQuestion = this.questions[this.questionCounter];
-        console.log("is this next one??",this.currentQuestion);
+        this.jsentence = this.currentQuestion.jsentence;
+        this.esentence = this.currentQuestion.esentence;
       }
   },
   async created() {
@@ -139,15 +154,21 @@ export default {
     this.questions = shuffle(phraseList);
     console.log("this.questions shuffled one",this.questions);
     this.currentQuestion = this.questions[this.questionCounter];
-    console.log("this.currentQuestion",this.currentQuestion)
-    console.log("this.currentQuestion.esentence",this.currentQuestion.esentence)
+    this.jsentence = this.currentQuestion.jsentence;
+    console.log("this.jsentence",this.jsentence);
+    this.esentence = this.currentQuestion.esentence;
+    console.log("this.esentence",this.esentence);
   },
   watch: {
     recoredText: function() {
       // console.log("check");
       this.answerChecker();
-      if(this.myAnswer === this.answerOne.join(" ")){
+      if(this.myAnswer === this.currentQuestionEs.join(" ")){
         this.correctness = true;
+        this.correctOnes.push(this.questions[this.questionCounter]);
+        console.log("this.correctOnes",this.correctOnes);
+        var index = this.questions.indexOf(this.questions[this.questionCounter]);
+        this.questions.splice(index, 1);
         this.myAnswer = this.currentQuestion.esentence;
         var self = this;
         setTimeout(function(){

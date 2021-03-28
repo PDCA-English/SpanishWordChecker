@@ -76,7 +76,7 @@ export default {
         var recoredTextArray = this.recoredText.split(" ");
         var tempAns = [];
         var currentQuestionEs = [];
-        currentQuestionEs = this.currentQuestion.esentence.toLowerCase().split(" ");
+        currentQuestionEs = this.currentQuestion.esentence.toLowerCase().split(" ").replace(/!/g, '').replace(/¡/g, '').replace(/\?/g, '').replace(/¿/g, '').replace(/./g, '');
         console.log("currentQuestionEs",currentQuestionEs);
         for (let i = 0, j = 0; i < recoredTextArray.length; ){
           if (recoredTextArray[i] === currentQuestionEs[j]){

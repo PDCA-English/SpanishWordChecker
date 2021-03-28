@@ -9,8 +9,10 @@
     </div>
     <div class="quizContents">
       <div id="Jsentence"></div>
-      <div id="Esentence">{{ answerInfo }}</div>
+      <div id="Esentence"></div>
+      <div id="myAnswer">{{ myAnswer }}</div>
       <div id="recoredText">{{ recoredText }}</div>
+      <h1 v-show="correctness">！正解！</h1>
     </div>
     <div class="quizHints">
       <button>単語数</button>
@@ -30,10 +32,17 @@ export default {
       recoredText: "",
       /*timer*/
       timer: null,
-      time: 10,
+      time: 11,
       timeComment: "",
       /*answer checker*/
-      answerInfo: [],
+      myAnswer: "",
+      answerOne: "yo como".split(" "),
+      correctness: false,
+      waitSec: 3,
+      questions: [],
+      correctOnes: [],
+      questionCounter: 0,
+      currentQuestion: [],
     }
   },
   mounted() {
@@ -50,13 +59,36 @@ export default {
       countdown: function() {
         this.time --;
         this.timeComment = `残り${this.time}秒`;
-        if(this.time==0){
-          clearInterval(this.timer)
+        if(this.correctness === true){
+          this.timeComment = "！正解！";
+          this.time = 10;
+        } else if(this.time<=0 && this.time>=-this.waitSec){
           this.timeComment = "終了";
+        } else if(this.time==-this.waitSec-1){
+          this.time = 10;
+          this.timeComment = `残り${this.time}秒`;
+          // this.nextQuestion();
         }
       },
-      answerMaker: function() {
-
+      answerChecker: function() {
+        var recoredTextArray = this.recoredText.split(" ");
+        var tempAns = [];
+        for (let i = 0, j = 0; i < recoredTextArray.length; ){
+          // console.log(recoredTextArray[i]);
+          // console.log(this.answerOne[i]);
+          if (recoredTextArray[i] === this.answerOne[j]){
+            tempAns.push(recoredTextArray[i]);
+            i += 1;
+            j += 1;
+          } else {
+            i += 1;
+          }
+        }
+        this.myAnswer = tempAns.join(" ");
+      },
+      nextQuestion: function() {
+        this.questionCounter += 1;
+        console.log("is this next one??",this.currentQuestion);
       }
   },
   async created() {
@@ -65,6 +97,7 @@ export default {
     recognition.lang = "es-ES";
     recognition.continuous = true;
     recognition.onresult = await this.recognize;
+
     this.recognition = recognition;
     this.recognition.start();
 
@@ -72,22 +105,49 @@ export default {
     const chapters = resChapters.data.chapter;
     const selectData = this.$route.query.data;
     // 選択したチャプターの情報をループさせる
+    let phraseList = [];
     selectData.forEach((s) => {
-      console.log(s);
-      console.log(selectData);
-      // chaptersの中から取り出す選択したチャプターとマッチするものを取り出す
-      const chapter = chapters.find((c) => c.id === selectData.chapterId);
-      // チャプターが存在していたら
-      if (chapter) {
-        const filterdChapter = chapter.chapterContents.filter((content) => content.id === selectData.contentsIds
-          // セクションidが含まれているか確認
-        );
-        // 選択したチャプターのフレーズのみ取得
-        var answerInfo = this.answerInfo;
-        answerInfo = filterdChapter;
-        console.log(answerInfo);
-      }
+      // チャプターの情報を取得
+      // chapterからchapterContents（セクション）の情報を取得する
+      // 理由：（前のページで選択されたセクションのidが含まれているか判定するため）
+      const chapter = chapters.find((c) => c.id === s.chapterId);
+
+      // 前のページで選択されたセクション情報を取得後セクションの情報取得
+      // フレーズの取得
+      const sectionPhrase = chapter.chapterContents
+        .filter((content) => s.contentsIds.includes(content.id))
+        .map((c) => c.sectionContents);
+      console.log("sectionPhrase",sectionPhrase);
+      phraseList = phraseList.concat(sectionPhrase).flat();
+      console.log("phraseList",phraseList);
     });
+    // phraseListをシャッフルしquestionsへ格納
+    const shuffle = ([...array]) => {
+      for (let i = array.length - 1; i >= 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+    this.questions = shuffle(phraseList);
+    console.log("this.questions shuffled one",this.questions);
+    this.currentQuestion = this.questions[this.questionCounter];
+    console.log("this.currentQuestion",this.currentQuestion)
+    console.log("this.currentQuestion.esentence",this.currentQuestion.esentence)
+  },
+  watch: {
+    recoredText: function() {
+      console.log("check");
+      this.answerChecker();
+      if(this.myAnswer === this.answerOne.join(" ")){
+        this.correctness = true;
+        var self = this;
+        setTimeout(function(){
+          self.correctness = false;
+          this.nextQuestion();
+          },self.waitSec*1000);
+        }
+    }
   }
 }
 </script>

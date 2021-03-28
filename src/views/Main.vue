@@ -542,7 +542,7 @@ export default {
           ids = chapter.chapterContents.map(c => c);
         } else {
           // 選択されているセクションを取り出し「ids」に代入
-          ids = chapter.chapterContents.filter((content) => content.isSelected === true);
+          ids = chapter.chapterContents.filter((c) => c.isSelected === true).map((c) => c.id);
         }
         // チャプターの番号と選択されているセクションのidを持たせたデータ
         const data = {

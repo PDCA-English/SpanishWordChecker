@@ -48,7 +48,6 @@ export default {
           this.time = 10;
           this.timeComment = `残り${this.time}秒`;
         }
-        
       },
       answerChecker: function() {
         var recoredTextArray = this.recoredText.split(" ");

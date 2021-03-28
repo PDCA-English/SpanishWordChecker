@@ -62,21 +62,26 @@ export default {
         if(this.correctness === true){
           this.timeComment = "！正解！";
           this.time = 10;
+          this.nextQuestion();
+        } else if(this.time===0){
+          this.nextQuestion();
         } else if(this.time<=0 && this.time>=-this.waitSec){
           this.timeComment = "終了";
         } else if(this.time==-this.waitSec-1){
           this.time = 10;
           this.timeComment = `残り${this.time}秒`;
-          // this.nextQuestion();
         }
       },
       answerChecker: function() {
         var recoredTextArray = this.recoredText.split(" ");
         var tempAns = [];
+        var currentQuestionEs = [];
+        currentQuestionEs = this.currentQuestion.esentence.toLowerCase().split(" ");
+        console.log("currentQuestionEs",currentQuestionEs);
         for (let i = 0, j = 0; i < recoredTextArray.length; ){
-          // console.log(recoredTextArray[i]);
-          // console.log(this.answerOne[i]);
-          if (recoredTextArray[i] === this.answerOne[j]){
+          if (recoredTextArray[i] === currentQuestionEs[j]){
+              console.log("recoredTextArray[i]",recoredTextArray[i]);
+              console.log("this.currentQuestionEs[i]",currentQuestionEs[i]);
             tempAns.push(recoredTextArray[i]);
             i += 1;
             j += 1;
@@ -87,7 +92,9 @@ export default {
         this.myAnswer = tempAns.join(" ");
       },
       nextQuestion: function() {
+        this.myAnswer = "";
         this.questionCounter += 1;
+        this.currentQuestion = this.questions[this.questionCounter];
         console.log("is this next one??",this.currentQuestion);
       }
   },
@@ -137,10 +144,11 @@ export default {
   },
   watch: {
     recoredText: function() {
-      console.log("check");
+      // console.log("check");
       this.answerChecker();
       if(this.myAnswer === this.answerOne.join(" ")){
         this.correctness = true;
+        this.myAnswer = this.currentQuestion.esentence;
         var self = this;
         setTimeout(function(){
           self.correctness = false;

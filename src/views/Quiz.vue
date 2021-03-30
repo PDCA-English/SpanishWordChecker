@@ -46,6 +46,7 @@ export default {
       currentQuestionEs: [],
       esentence: "",
       jsentence: "",
+      repCounter: 0,
     }
   },
   mounted() {
@@ -116,7 +117,8 @@ export default {
         this.myAnswer = tempAns.join(" ");
       },
       /* 次の問題への移行 */
-      nextQuestion: function() {
+      nextQuestion: function () {
+        console.log("nextQuestion start");
         // まず「正解」と表示されている場合があるので、それを消すためにcorrectnessをfalseへ
         this.correctness = false;
         // recoredTextとmyAnswerは初期化
@@ -125,15 +127,19 @@ export default {
         // 次の問題へ移行するためにquestionCounterに１を足す
         this.questionCounter += 1;
         // 一周出題が終わったらquestionCounterを０に戻す
-        if (this.questionCounter > this.questions.length) {
+        if (this.questionCounter > this.questions.length-1) {
           this.questionCounter = 0;
+          this.repCounter += 1;
         }
         // 次の問題を定義
+        console.log("this.questionCounter",this.questionCounter);
+        console.log("this.questions",this.questions);
         this.currentQuestion = this.questions[this.questionCounter];
+        console.log("this.currentQuestion",this.currentQuestion);
         // 次の問題のスペイン語・日本語部分を定義
         this.esentence = this.currentQuestion.esentence;
         this.jsentence = this.currentQuestion.jsentence;
-        
+        console.log("nextQuestion end");
       }
   },
   async created() {
@@ -176,6 +182,7 @@ export default {
       return array;
     };
     this.questions = shuffle(phraseList);
+    console.log("*after shuffle(phraseList)",this.questions)
     // 最初の問題を作成
     this.currentQuestion = this.questions[this.questionCounter];
     this.currentQuestionEs = this.currentQuestion.esentence;
@@ -195,6 +202,7 @@ export default {
         // すでに正解を言えた問題は２回以上出題できないようquestionsから削除
         var index = this.questions.indexOf(this.questions[this.questionCounter]);
         this.questions.splice(index, 1);
+        console.log("*after splice",this.questions);
         // 正解と比較していた回答は全て小文字で記号も削除しているので、
         // 元の文であるcurrentQuestion.esentenceをmyAnswerへ代入し、最初が大文字で記号付きの正しい文をページに表示
         this.myAnswer = this.currentQuestion.esentence;
